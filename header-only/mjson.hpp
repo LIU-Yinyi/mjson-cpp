@@ -124,6 +124,7 @@ namespace param {
         }
 
         template<class T> void set(const std::string& keypath, const T& value) {
+            rapidjson::Pointer(keypath.c_str()).Create(this->document_);
             auto _ptr = rapidjson::Pointer(keypath.c_str()).Get(this->document_);
             set_<T>(_ptr, value);
         }
@@ -166,13 +167,14 @@ namespace param {
             if(iss.good()) { T value{}; iss >> value; return static_cast<T>(value); } else return default_value;
         }
 
-        template<class T, std::enable_if_t<utils::is_string<T>::value, int> = 0>
+        template<class T, std::enable_if_t<utils::is_cpp_string<T>::value, int> = 0>
         void set_(rapidjson::Value* value_ptr, const T& value) {
             if (value_ptr == nullptr) return;
-            value_ptr->SetString(value, this->document_.GetAllocator());
+            //rapidjson::Value _val(value.c_str(), this->document_.GetAllocator());
+            value_ptr->SetString(value.data(), value.size(), this->document_.GetAllocator());
         }
 
-        template<class T, std::enable_if_t<utils::is_real<T>::value, int> = 0>
+        template<class T, std::enable_if_t<utils::is_real<T>::value || utils::is_bool<T>::value || utils::is_c_string<T>::value, int> = 0>
         void set_(rapidjson::Value* value_ptr, const T& value) {
             if(value_ptr == nullptr) return;
             rapidjson::Value _val(value, this->document_.GetAllocator());

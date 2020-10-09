@@ -28,5 +28,9 @@ int main() {
     print_array(pm.get<std::vector<double>>("/advanced/vector"));
     print_array(pm.get<std::vector<std::complex<double>>>("/advanced/complex_vector"));
 
+    pm.set("/test/complex", std::complex<double>(6.0, -9.0));
+    print_array(pm.keys(), '\n');
+    std::cout << pm.get<std::complex<double>>("/test/complex") << std::endl;
+
     return 0;
 }
