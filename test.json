@@ -1,0 +1,18 @@
+{
+  "basic": {
+    "bool": true,
+    "integer": 100,
+    "float": 0.123,
+    "string": "text"
+  },
+  "advanced": {
+    "list": [1, 2, 3, 4],
+    "vector": [1.0, 2.0],
+    "row_vector": [[1.0, 2.0]],
+    "col_vector": [[1.0], [2.0]],
+    "matrix": [[1, 2, 3], [4, 5, 6], [7, 8, 9], [10, 11, 12]],
+    "complex": "(1,2)",
+    "complex_vector": ["(1,2)", "(3,4)"],
+    "complex_matrix": [["(1,2)", "(3,4)"], ["(5,6)", "(7,8)"]]
+  }
+}
