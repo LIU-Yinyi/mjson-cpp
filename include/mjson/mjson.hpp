@@ -1,9 +1,13 @@
-
+/**
+ * @file mjson.hpp
+ * @brief Mathematical JSON as Parameters Manager based on RapidJSON
+ * @author LIU Yinyi
+ * @date October 10, 2020
+ * @version 0.1.0
+ */
 
 #ifndef MJSON_CPP
 #define MJSON_CPP
-
-#define MJSON_CPP_USE_EIGEN
 
 // Standard Template Library
 #include <type_traits>
@@ -21,12 +25,8 @@
 #include <rapidjson/writer.h>
 #include <rapidjson/prettywriter.h>
 
-#ifdef MJSON_CPP_USE_EIGEN
-// Eigen Library
-#include <Eigen/Dense>
-#endif //MJSON_CPP_USE_EIGEN
-
-namespace param::utils {
+namespace param {
+    namespace utils {
 
     template<typename T> struct is_bool : std::is_same<T, bool> {};
 
@@ -47,11 +47,9 @@ namespace param::utils {
     template<typename T> struct is_string : std::integral_constant<bool, is_c_string<T>::value || is_cpp_string<T>::value> {};
 
     template<typename T> struct is_array : std::false_type {};
-    template<template<typename, typename> typename C, typename T, typename Alloc> struct is_array<C<T, Alloc>> : std::true_type {};
+    template<template<typename, typename> class C, typename T, typename Alloc> struct is_array<C<T, Alloc>> : std::true_type {};
 
-#ifdef MJSON_CPP_USE_EIGEN
-    template<typename T> struct is_eigen : std::is_base_of<Eigen::EigenBase<T>, T> {};
-#endif //MJSON_CPP_USE_EIGEN
+    }
 }
 
 namespace param {
@@ -102,7 +100,7 @@ namespace param {
                     };
             rapidjson::Pointer root;
             dumpFunc(this->document_, root);
-            return std::move(v);
+            return v;
         }
 
         template<class T, std::enable_if_t<!utils::is_array<T>::value, int> = 0> auto get(const std::string& keypath, const T& default_val = T()) {
@@ -173,7 +171,7 @@ namespace param {
         }
 
         template<class T, std::enable_if_t<utils::is_array<T>::value, int> = 0>
-        T get_(rapidjson::Value* value_ptr, const T& default_value = T()) { return default_value; }
+        T get_(rapidjson::Value* , const T& default_value = T()) { return default_value; }
 
         template<class T, std::enable_if_t<utils::is_cpp_string<T>::value, int> = 0>
         void set_(rapidjson::Value* value_ptr, const T& value) {
