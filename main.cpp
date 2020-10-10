@@ -32,5 +32,25 @@ int main() {
     print_array(pm.keys(), '\n');
     std::cout << pm.get<std::complex<double>>("/test/complex") << std::endl;
 
+    std::cout << "------ 2D Matrix ------" << std::endl;
+    auto mat = pm.get<std::vector<std::vector<double>>>("/advanced/matrix");
+    for(const auto& el : mat) {
+        for(const auto& itm : el) {
+            std::cout << itm << " ";
+        }
+        std::cout << std::endl;
+    }
+
+    std::cout << "------ 3D Matrix ------" << std::endl;
+    auto mat3 = pm.get<std::vector<std::vector<std::vector<double>>>>("/advanced/matrix3");
+    for(const auto& ed : mat3) {
+        for(const auto& el : ed) {
+            for(const auto& itm : el) {
+                std::cout << itm << " ";
+            }
+            std::cout << std::endl;
+        }
+        std::cout << std::endl;
+    }
     return 0;
 }

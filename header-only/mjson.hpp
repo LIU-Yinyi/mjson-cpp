@@ -114,8 +114,13 @@ namespace param {
             auto _ptr = rapidjson::Pointer(keypath.c_str()).Get(this->document_);
             T value{};
             if(_ptr->IsArray()) {
+                size_t _index = 0;
                 for(auto& item : _ptr->GetArray()) {
-                    value.emplace_back(get_<C>(&item));
+                    if(!item.IsNull()) {
+                        std::string _subpath(keypath);
+                        _subpath += "/" + std::to_string(_index++);
+                        value.emplace_back(get<C>(_subpath));
+                    }
                 }
                 return value;
             } else {
@@ -150,13 +155,13 @@ namespace param {
         template<class T, std::enable_if_t<utils::is_integral<T>::value, int> = 0>
         T get_(rapidjson::Value* value_ptr, const T& default_value = T()) {
             if(value_ptr == nullptr) return default_value;
-            if(value_ptr->IsInt64()) return static_cast<T>(value_ptr->GetInt64()); else return default_value;
+            if(value_ptr->IsNumber()) return static_cast<T>(value_ptr->GetInt64()); else return default_value;
         }
 
         template<class T, std::enable_if_t<utils::is_floating<T>::value, int> = 0>
         T get_(rapidjson::Value* value_ptr, const T& default_value = T()) {
             if(value_ptr == nullptr) return default_value;
-            if(value_ptr->IsDouble()) return static_cast<T>(value_ptr->GetDouble()); else return default_value;
+            if(value_ptr->IsNumber()) return static_cast<T>(value_ptr->GetDouble()); else return default_value;
         }
 
         template<class T, std::enable_if_t<utils::is_complex<T>::value, int> = 0>
@@ -167,10 +172,12 @@ namespace param {
             if(iss.good()) { T value{}; iss >> value; return static_cast<T>(value); } else return default_value;
         }
 
+        template<class T, std::enable_if_t<utils::is_array<T>::value, int> = 0>
+        T get_(rapidjson::Value* value_ptr, const T& default_value = T()) { return default_value; }
+
         template<class T, std::enable_if_t<utils::is_cpp_string<T>::value, int> = 0>
         void set_(rapidjson::Value* value_ptr, const T& value) {
             if (value_ptr == nullptr) return;
-            //rapidjson::Value _val(value.c_str(), this->document_.GetAllocator());
             value_ptr->SetString(value.data(), value.size(), this->document_.GetAllocator());
         }
 
