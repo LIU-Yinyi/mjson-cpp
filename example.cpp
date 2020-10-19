@@ -26,6 +26,8 @@ void print_matrix(const T& matrix, const std::string& sep = " ") {
     std::cout << std::endl;
 }
 
+template <class T> using Mat4D = std::vector<std::vector<std::vector<std::vector<T>>>>;
+
 int main() {
 
     param::ParaManager pm;
@@ -50,12 +52,16 @@ int main() {
     std::cout << pm.get<std::complex<double>>("/test/complex") << std::endl;
 
     std::cout << "------ 2D Matrix ------" << std::endl;
-    auto mat2d = pm.get<std::vector<std::vector<double>>>("/advanced/matrix");
+    auto mat2d = pm.get<std::vector<std::vector<double>>>("/advanced/matrix2d");
     print_matrix(mat2d, ", ");
 
     std::cout << "------ 3D Matrix ------" << std::endl;
-    auto mat3d = pm.get<std::vector<std::vector<std::vector<double>>>>("/advanced/matrix3");
+    auto mat3d = pm.get<std::vector<std::vector<std::vector<double>>>>("/advanced/matrix3d");
     print_matrix(mat3d, ", ");
+
+    std::cout << "------ 4D Matrix ------" << std::endl;
+    auto mat4d = pm.get<Mat4D<double>>("/advanced/matrix4d");
+    print_matrix(mat4d, ", ");
 
     std::cout << "------ 2D Matrix Complex------" << std::endl;
     auto mat2cd = pm.get<std::vector<std::vector<std::complex<double>>>>("/advanced/complex_matrix");
