@@ -15,6 +15,8 @@
 #include <complex>
 #include <string>
 #include <vector>
+#include <functional>
+#include <algorithm>
 
 // RapidJSON Library
 #include <rapidjson/document.h>
