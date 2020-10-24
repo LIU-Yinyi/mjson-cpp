@@ -10,7 +10,6 @@ option(MJSON_BUILD_TEST "mjson-cpp build test applications" OFF)
 
 ####################################
 # find packages
-find_package(rapidjson REQUIRED)
 
 ####################################
 # configuration for common cases
@@ -18,7 +17,7 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror -Wno-missing-field-initializers")
 
-set(MJSON_INCLUDES ${CMAKE_CURRENT_BINARY_DIR} include/mjson ${RAPIDJSON_INCLUDE_DIRS})
+set(MJSON_INCLUDES ${CMAKE_CURRENT_BINARY_DIR} include include/mjson include/rapidjson)
 
 ####################################
 # configuration based on options
