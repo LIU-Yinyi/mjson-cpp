@@ -86,6 +86,10 @@ namespace param {
             this->document_.Accept(writer);
         }
 
+        bool erase(const std::string& keypath) {
+            return rapidjson::Pointer(keypath.c_str()).Erase(this->document_);
+        }
+
         std::vector<std::string> keys() {
             std::vector<std::string> v{};
             std::function<void(const rapidjson::Value&, const rapidjson::Pointer&)> dumpFunc =
@@ -181,11 +185,29 @@ namespace param {
             value_ptr->SetString(value.data(), value.size(), this->document_.GetAllocator());
         }
 
-        template<class T, std::enable_if_t<utils::is_real<T>::value || utils::is_bool<T>::value || utils::is_c_string<T>::value, int> = 0>
+        template<class T, std::enable_if_t<utils::is_c_string<T>::value, int> = 0>
         void set_(rapidjson::Value* value_ptr, const T& value) {
             if(value_ptr == nullptr) return;
-            rapidjson::Value _val(value, this->document_.GetAllocator());
-            value_ptr->Set(_val);
+            value_ptr->SetString(value, this->document_.GetAllocator());
+        }
+
+
+        template<class T, std::enable_if_t<utils::is_bool<T>::value, int> = 0>
+        void set_(rapidjson::Value* value_ptr, const T& value) {
+            if(value_ptr == nullptr) return;
+            value_ptr->SetBool(value);
+        }
+
+        template<class T, std::enable_if_t<utils::is_integral<T>::value, int> = 0>
+        void set_(rapidjson::Value* value_ptr, const T& value) {
+            if(value_ptr == nullptr) return;
+            value_ptr->SetInt64(value);
+        }
+
+        template<class T, std::enable_if_t<utils::is_floating<T>::value, int> = 0>
+        void set_(rapidjson::Value* value_ptr, const T& value) {
+            if(value_ptr == nullptr) return;
+            value_ptr->SetFloat(value);
         }
 
         template<class T, std::enable_if_t<utils::is_complex<T>::value, int> = 0>

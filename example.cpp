@@ -47,7 +47,12 @@ int main() {
     print_array(pm.get<std::vector<std::complex<double>>>("/advanced/complex_vector"), ", ");
 
     std::cout << "------ Set TEST ------" << std::endl;
+    pm.set("/test/bool", true);
+    pm.set("/test/integer", 123);
+    pm.set("/test/float", 456.789);
+    pm.set("/test/c_str", "c-style-string");
     pm.set("/test/complex", std::complex<double>(6.0, -9.0));
+    pm.erase("/test/bool");
     print_array(pm.keys(), "\n");
     std::cout << pm.get<std::complex<double>>("/test/complex") << std::endl;
 
