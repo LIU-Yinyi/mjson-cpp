@@ -132,10 +132,19 @@ namespace param {
             }
         }
 
-        template<class T> void set(const std::string& keypath, const T& value) {
+        template<class T, std::enable_if_t<!utils::is_array<T>::value, int> = 0> void set(const std::string& keypath, const T& value) {
             rapidjson::Pointer(keypath.c_str()).Create(this->document_);
             auto _ptr = rapidjson::Pointer(keypath.c_str()).Get(this->document_);
             set_<T>(_ptr, value);
+        }
+
+        template<class T, class C = typename T::value_type, std::enable_if_t<utils::is_array<T>::value, int> = 0> void set(const std::string& keypath, const T& value) {
+            size_t _index = 0;
+            for(auto& item: value) {
+                std::string _subpath(keypath);
+                _subpath += "/" + std::to_string(_index++);
+                set<C>(_subpath, item);
+            }
         }
 
     protected:

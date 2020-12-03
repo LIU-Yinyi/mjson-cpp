@@ -52,6 +52,8 @@ int main() {
     pm.set("/test/float", 456.789);
     pm.set("/test/c_str", "c-style-string");
     pm.set("/test/complex", std::complex<double>(6.0, -9.0));
+    pm.set("/test/vector_double", std::vector<double>{1.0, 2.0});
+    pm.set("/test/mat_double", std::vector<std::vector<double>>{{1.0, 2.0}, {3.0, 4.0}});
     pm.erase("/test/bool");
     print_array(pm.keys(), "\n");
     std::cout << pm.get<std::complex<double>>("/test/complex") << std::endl;
@@ -72,7 +74,7 @@ int main() {
     auto mat2cd = pm.get<std::vector<std::vector<std::complex<double>>>>("/advanced/complex_matrix");
     print_matrix(mat2cd, ", ");
 
-
+    pm.save("save.json");
 
     return 0;
 }
