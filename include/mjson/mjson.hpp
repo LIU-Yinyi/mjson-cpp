@@ -216,7 +216,7 @@ namespace param {
         template<class T, std::enable_if_t<utils::is_floating<T>::value, int> = 0>
         void set_(rapidjson::Value* value_ptr, const T& value) {
             if(value_ptr == nullptr) return;
-            value_ptr->SetFloat(value);
+            value_ptr->SetDouble(value);
         }
 
         template<class T, std::enable_if_t<utils::is_complex<T>::value, int> = 0>
